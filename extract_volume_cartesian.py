@@ -3,6 +3,11 @@
 import pickle
 import numpy as np
 import scipy.sparse as sparse
+
+import sys
+sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy.sbrisson')
+
+
 from Splines import CubicBSplines, SphericalSplines
 from Model1D import Model1D
 from ModelA3d import ModelA3d
@@ -46,7 +51,7 @@ y = y.T
 r = RN - np.arange(box[0][2], box[1][2] - 1e-5 * dr, - dr)
 nlon, nlat = x.shape
 nr = r.size
-print 'volume is %i x %i x %i' % (nlon, nlat, nr)
+print('volume is %i x %i x %i' % (nlon, nlat, nr))
 
 # load the 1D reference model
 ref = Model1D(ref_file)
@@ -84,7 +89,7 @@ m0 = {'S': np.sqrt((2.0 * vsv ** 2 + vsh ** 2) / 3.0),
 
 # sample
 for k in c:
-    print H[k].shape, V.shape, c[k].shape, (V * c[k]).T.shape
+    print(H[k].shape, V.shape, c[k].shape, (V * c[k]).T.shape)
 m = {k: (H[k] * (V * c[k]).T).reshape((nlon, nlat, nr)) for k in c}
 
 # save

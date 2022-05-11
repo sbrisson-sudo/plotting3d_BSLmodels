@@ -7,7 +7,12 @@ from time import time
 import numpy as np
 from mayavi import mlab
 
+import sys
+sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy.sbrisson')
+
 from UCBColorMaps import cmapSved
+
+print(">> Loading modules ok")
 
 #########
 # const #
@@ -181,18 +186,18 @@ def use_mpl_colormap(cmap_in, o):
 def plot_hotspots(m, fac, xlims, ylims, r_plot = None, **kwargs):
     with open('%s/hotspots.pkl' % (TECTONICS_PATH), 'rb') as f:
         hotspots = pickle.load(f)
-    xs, ys = hotspots[:,0], hotspots[:,1]
+    xs, ys = hotspots[1][:,0], hotspots[1][:,1]
     if config['ensure_positive_lons']:
         xs = (xs + 360.0) % 360.0
     if r_plot is None:
         r_plot = 0.5 * (RN + RSURF)
     for x, y in zip(xs, ys):
-        print x,y
+        print(x,y)
         if x >= xlims[0] and x <= xlims[1] and y >= ylims[0] and y <= ylims[1]:
             o = m.points3d([x], [y], [r_plot / fac], **kwargs)
             o.glyph.glyph_source.glyph_source.direction = (0,0,1)
             o.glyph.glyph_source.glyph_source.height = 1.25 * o.glyph.glyph_source.glyph_source.radius
-            print o.glyph.glyph_source.glyph_source
+            print(o.glyph.glyph_source.glyph_source)
 
 def plot_plates(m, fac, xlims, ylims, r_plot = None, **kwargs):
     for bound in ['ridge', 'transform', 'trench']:
@@ -250,6 +255,8 @@ def plot_volume_isosurface():
 
     ##################
     # data load / prep
+    
+    print(">> loading serialized data")
 
     # load the data
     x,y,r,m0,m = pickle.load(open('volume.%s.pkl' % (config['box_name']), 'rb'))
@@ -273,10 +280,12 @@ def plot_volume_isosurface():
 
     ##########
     # plotting
+    
+    print(">> mayavi environement initialization")
 
     # initialize the figure
-    if config['render_offscreen']:
-        mlab.options.offscreen = True
+    # if config['render_offscreen']:
+    #     mlab.options.offscreen = True
     f = mlab.figure(1, **config['figure'])
 
     # isocontours
@@ -373,7 +382,7 @@ def plot_volume_isosurface():
             color=scale_color, tube_radius=None, line_width=scale_lw)
 
         if config['tick_labels']:
-            print int(RN - rt) % 250
+            print(int(RN - rt) % 250)
             if int(RN - rt) % 250 == 0:
                 o = mlab.text3d(x[-1,-1], y[-1,-1], rt / fac, '%.0f' % (RN - rt))
 

@@ -8,7 +8,7 @@ import numpy as np
 from mayavi import mlab
 
 import sys
-sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy.sbrisson')
+sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy')
 
 from UCBColorMaps import cmapSved
 

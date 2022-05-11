@@ -5,7 +5,7 @@ import numpy as np
 import scipy.sparse as sparse
 
 import sys
-sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy.sbrisson')
+sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy')
 
 
 from Splines import CubicBSplines, SphericalSplines

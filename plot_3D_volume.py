@@ -50,7 +50,7 @@ config = {
     'set_name': '20150718-SPSS',
 
     # name of the exported volume (i.e. will read in volume.%s.pkl)
-    'box_name': '180W30S-120W30N_2800-50km',
+    'box_name': 'indian_ocean',
 
     # plotting geometry
     'cut_top': True,
@@ -183,44 +183,72 @@ def use_mpl_colormap(cmap_in, o):
 # plotting support #
 ####################
 
-def plot_hotspots(m, fac, xlims, ylims, r_plot = None, **kwargs):
+def plot_hotspots(m, fac, xlims, ylims, r_min, r_plot = None, **kwargs):
+        
     with open('%s/hotspots.pkl' % (TECTONICS_PATH), 'rb') as f:
         hotspots = pickle.load(f)
+        
     xs, ys = hotspots[1][:,0], hotspots[1][:,1]
+    
     if config['ensure_positive_lons']:
         xs = (xs + 360.0) % 360.0
+        
     if r_plot is None:
         r_plot = 0.5 * (RN + RSURF)
+        
     for x, y in zip(xs, ys):
-        print(x,y)
+
         if x >= xlims[0] and x <= xlims[1] and y >= ylims[0] and y <= ylims[1]:
+            
+            # plot cone at the surface
             o = m.points3d([x], [y], [r_plot / fac], **kwargs)
             o.glyph.glyph_source.glyph_source.direction = (0,0,1)
             o.glyph.glyph_source.glyph_source.height = 1.25 * o.glyph.glyph_source.glyph_source.radius
             print(o.glyph.glyph_source.glyph_source)
 
+            # plot line to the CMB
+            color = kwargs.get("color")
+            line_width = 1e6
+            tube_radius = 1e-1
+            
+            mlab.plot3d([x,x],[y,y],[r_min / fac,r_plot / fac], color=color, tube_radius=tube_radius)
+            
+            
+
 def plot_plates(m, fac, xlims, ylims, r_plot = None, **kwargs):
+    
     for bound in ['ridge', 'transform', 'trench']:
+        
         with open('%s/%s.pkl' % (TECTONICS_PATH, bound), 'rb') as f:
             name, segs = pickle.load(f)
+            
         if config['ensure_positive_lons']:
             segs[:,0] = (segs[:,0] + 360) % 360.0
+            
         ikeep, = np.nonzero(np.all(
             np.vstack([segs[:,0] >= xlims[0], segs[:,0] <= xlims[1],
                        segs[:,1] >= ylims[0], segs[:,1] <= ylims[1]]),
             axis=0))
+        
         if r_plot is None:
             r_plot = RSURF
+            
         segs_reg = []
+        
         for i in range(ikeep.size):
+            
             if segs_reg and ikeep[i] != ikeep[i-1] + 1:
                 segs_reg.append(np.array([np.nan,np.nan]))
+                
             segs_reg.append(segs[ikeep[i],:])
+            
         segs_reg = [np.array([np.nan,np.nan])] + segs_reg
         segs_reg.append(np.array([np.nan,np.nan]))
         segs_reg = np.array(segs_reg)
         inan, = np.nonzero(np.isnan(segs_reg[:,0]))
+        
         for i,j in zip(inan[:-1], inan[1:]):
+            
             srx, sry = segs_reg[i+1:j,0], segs_reg[i+1:j,1]
             if srx.size > 0:
                 m.plot3d(srx, sry, r_plot / fac * np.ones(j - i - 1), **kwargs)
@@ -396,13 +424,14 @@ def plot_volume_isosurface():
             mlab, fac, xlims, ylims,
             color=(0,0.8,0.1),
             mode='cone',
+            r_min=r[0],  
             r_plot=r_cut + 30.0 if config['hotspots_at_cut_depth'] else None,
             resolution=32,
             scale_factor=6)
     if config['coastlines']:
         plot_coast(
             mlab, fac, xlims, ylims,
-            color=(0.4,0.4,0.4),
+            color=(1.0,1.0,1.0),
             r_plot = r[-1],
             tube_radius=None,
             line_width=2.0)

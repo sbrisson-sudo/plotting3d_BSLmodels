@@ -24,16 +24,26 @@ RN = 6371.0
 ##########
 
 # (lower left, upper right)
-box_name = '180W30S-120W30N_2800-50km'
-box = ((-180.0, -30.0, 2800.0), (-120.0, 30.0, 50.0))
+
+# North Pacific (Hawaï large)
+# box_name = '180W30S-120W30N_2800-50km'
+# box = (
+#     (-180.0, -30.0, 2800.0), 
+#     (-120.0, 30.0, 50.0)
+#     )
 dx = 0.5    # degree
 dr = 25.0   # km
 
-# (lower left, upper right)
 # box_name = 'Hawaii-Small'
 # box = ((-165.0, 10.0, 2800.0), (-145.0, 30.0, 50.0))
 # dx = 0.2
 # dr = 25.0
+
+box_name = 'indian_ocean'
+box = (
+    (40.0, -60.0, 2800.0), 
+    (120.0, 0.0, 50.0)
+    )
 
 # model
 param_grids = {'S': 'grid/grid.6', 'X': 'grid/grid.4'}
@@ -48,6 +58,7 @@ x, y = np.meshgrid(np.arange(box[0][0], box[1][0] + 1e-5 * dx, dx),
                    np.arange(box[0][1], box[1][1] + 1e-5 * dx, dx))
 x = x.T
 y = y.T
+
 r = RN - np.arange(box[0][2], box[1][2] - 1e-5 * dr, - dr)
 nlon, nlat = x.shape
 nr = r.size
@@ -94,3 +105,5 @@ m = {k: (H[k] * (V * c[k]).T).reshape((nlon, nlat, nr)) for k in c}
 
 # save
 pickle.dump((x, y, r, m0, m), open('volume.%s.pkl' % (box_name), 'wb'))
+
+print()

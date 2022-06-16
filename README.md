@@ -9,6 +9,11 @@ conda env create -n mayavi-env --file=environment.yml
 3. update the paths to this package in the codes
 
 
+# On MacOS
+
+Install the minimal environment (`environment_macos.yml`) then force install `mayavi` (with pip not conda). 
+
+
 # Example codes for 3D plotting
 
 Here, you can find generalized versions of the code I've used for 3D plotting

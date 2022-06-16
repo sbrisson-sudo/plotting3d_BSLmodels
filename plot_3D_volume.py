@@ -208,7 +208,7 @@ def plot_hotspots(m, fac, xlims, ylims, r_min, r_plot = None, **kwargs):
             o = m.points3d([x], [y], [r_plot / fac], **kwargs)
             o.glyph.glyph_source.glyph_source.direction = (0,0,1)
             o.glyph.glyph_source.glyph_source.height = 1.25 * o.glyph.glyph_source.glyph_source.radius
-            print(o.glyph.glyph_source.glyph_source)
+            # print(o.glyph.glyph_source.glyph_source)
 
             # plot line to the CMB
             color = kwargs.get("color")
@@ -414,7 +414,7 @@ def plot_volume_isosurface(volume_file, box_name):
             color=scale_color, tube_radius=None, line_width=scale_lw)
 
         if config['tick_labels']:
-            print(int(RN - rt) % 250)
+            # print(int(RN - rt) % 250)
             if int(RN - rt) % 250 == 0:
                 o = mlab.text3d(x[-1,-1], y[-1,-1], rt / fac, '%.0f' % (RN - rt))
 

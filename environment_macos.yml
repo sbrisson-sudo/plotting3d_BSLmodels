@@ -3,15 +3,12 @@ channels:
   - defaults
 dependencies:
   - tzdata=2022a
-  - ld_impl_linux-64=2.35.1
   - intel-openmp=2021.4.0
   - numpy=1.21.5
-  - libgfortran-ng=7.5.0
   - pcre=8.45
   - openssl
   - numpy-base=1.21.5
   - qt=5.9.7
-  - libgcc-ng=9.3.0
   - _libgcc_mutex=0.1
   - readline=8.1.2
   - wheel=0.37.1
@@ -26,7 +23,6 @@ dependencies:
   - mkl=2021.4.0
   - ca-certificates
   - libpng=1.6.37
-  - _openmp_mutex=4.5
   - blas=1.0
   - mkl_random=1.2.2
   - expat=2.4.4
@@ -38,9 +34,7 @@ dependencies:
   - pyqt=5.9.2
   - icu=58.2
   - sip=4.19.13
-  - libstdcxx-ng=9.3.0
   - six=1.16.0
-  - libxcb=1.14
   - jpeg=9e
   - libgfortran4=7.5.0
   - mkl-service=2.4.0
@@ -48,10 +42,8 @@ dependencies:
   - certifi
   - xz=5.2.5
   - fontconfig=2.13.1
-  - glib=2.69.1
   - libuuid=1.0.3
   - dbus=1.13.18
   - sqlite=3.38.3
   - pandas
   - cartopy
-prefix: /home/sbrisson/anaconda3/envs/mayavi-env

@@ -3,10 +3,12 @@
 import pickle
 import numpy as np
 import scipy.sparse as sparse
+import json
+
+import os
 
 import sys
-sys.path.append('/home/sylvain/documents/Geosciences/stage-BSL/tools/ucbpy')
-
+sys.path.append('/home/sbrisson/documents/Geosciences/stage-BSL/tools/ucbpy')
 
 from Splines import CubicBSplines, SphericalSplines
 from Model1D import Model1D
@@ -34,21 +36,27 @@ RN = 6371.0
 dx = 0.5    # degree
 dr = 25.0   # km
 
-# box_name = 'Hawaii-Small'
-# box = ((-165.0, 10.0, 2800.0), (-145.0, 30.0, 50.0))
-# dx = 0.2
-# dr = 25.0
+box_name = 'hawaii_small'
+box = ((-165.0, 10.0, 2800.0), (-145.0, 30.0, 50.0))
+dx = 0.2
+dr = 25.0
 
-box_name = 'indian_ocean'
-box = (
-    (40.0, -60.0, 2800.0), 
-    (120.0, 0.0, 50.0)
-    )
+# box_name = 'indian_ocean'
+# box = (
+#     (40.0, -60.0, 2800.0), 
+#     (120.0, 0.0, 50.0)
+#     )
+
+# box_name = 'island'
+# box = (
+#     (-70.0, 30.0, 2891), 
+#     (60.0, 70.0, 50.0)
+#     )
 
 # model
 param_grids = {'S': 'grid/grid.6', 'X': 'grid/grid.4'}
-a3d_file = 'Model-2.6S6X4-ZeroMean.A3d'
-ref_file = 'Model-2.6S6X4-ZeroMean_1D'
+a3d_file = 'models/Model-2.6S6X4-ZeroMean.A3d'
+ref_file = 'models/Model-2.6S6X4-ZeroMean_1D'
 
 ###############################################################################
 ###############################################################################
@@ -104,6 +112,20 @@ for k in c:
 m = {k: (H[k] * (V * c[k]).T).reshape((nlon, nlat, nr)) for k in c}
 
 # save
-pickle.dump((x, y, r, m0, m), open('volume.%s.pkl' % (box_name), 'wb'))
+data_dir = "data."+box_name
+print(f"Saving data in the directory {data_dir}")
+if not(os.path.exists(box_name)): os.mkdir(data_dir)
+os.chdir(data_dir)
+pickle.dump((x, y, r, m0, m), open(f'volume.{box_name}.pkl', 'wb'))
 
-print()
+# also save box configuration
+config = {
+    "box_name" : box_name,
+    "box" : box,
+    "dx" : dx,
+    "dr" : dr
+}
+
+with open(f'box_config.{box_name}.json', 'w') as f:
+    json.dump(config, f, indent=4)
+

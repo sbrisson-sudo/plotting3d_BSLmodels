@@ -8,11 +8,12 @@ Created on Thu Apr 07 2022
 
 # importations
 import sys,os
+import json
 
-path_bsl_toolbox = "/home/sylvain/documents/Geosciences/stage-BSL/tools/bsl_toolbox"
+path_bsl_toolbox = "/home/sbrisson/documents/Geosciences/stage-BSL/tools/bsl_toolbox"
 sys.path.append(path_bsl_toolbox)
 
-from plotting.plot_A3Dmodel_map_greatCircles import plot_model, plot_hotspots, plot_plates
+from plotting.A3Dmodel_map_greatCircles import plot_model, plot_hotspots, plot_plates
 from common.setup import models_path_default
 
 import matplotlib.pyplot as plt
@@ -46,20 +47,32 @@ class LowerThresholdOthographic(ccrs.Orthographic):
 
 if __name__ == "__main__":
     
-    # +++ config +++
-    box_name = 'Indian ocean'
-    box = (
-        (40.0, -60.0), 
-        (120.0, 0.0)
-        )
-    lon0,lat0 = 80.0,-30.0
-    depth = 2800.
-    # +++ config +++
-    
     
     parser = argparse.ArgumentParser() 
+    parser.add_argument("box_name",type=str)
     parser.add_argument('-o',dest="out_file",type=str,help='output figure name')
     args = parser.parse_args()
+    
+
+    box_name = args.box_name
+
+    if not(os.path.exists(f"data.{box_name}")):
+        print(f"Error : data.{box_name} not found.")
+        exit()
+        
+    with open(os.path.join(f"data.{box_name}",f'box_config.{box_name}.json')) as json_file:
+        config = json.load(json_file)
+        
+    box = config["box"]
+    box = [box[0][:2],box[1][:2]] # drop depth info
+
+    # mean box point : unstable
+    lon0 = (box[0][0] + box[1][0]) / 2.
+    lat0 = (box[0][1] + box[1][1]) / 2.
+    depth = 2800.
+    
+    
+
     
     
     fig = plt.figure(figsize=(8,8))

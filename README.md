@@ -1,3 +1,14 @@
+# Short documentation
+
+In order to run the scripts you need to :
+1. set up the associated conda environement
+```bash
+conda env create -n mayavi-env --file=environment.yml
+```
+2. dowload the UCB package `usbpy` (available at https://github.com/sbrisson-sudo/ucbpy.git), you may need to recompile the C interfaces
+3. update the paths to this package in the codes
+
+
 # Example codes for 3D plotting
 
 Here, you can find generalized versions of the code I've used for 3D plotting
